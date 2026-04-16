@@ -39,6 +39,14 @@ public class Beverage : IMyCloneable<Beverage>, ICloneable
 
 	public object Clone() => MyClone();
 
+	/// <summary>
+	/// Поверхностное копирование
+	/// </summary>
+	public Beverage ShallowClone()
+	{
+		return (Beverage)this.MemberwiseClone();
+	}
+
 	public override string ToString()
 	{
 		return $"{Name}, {VolumeMl}мл, {Price}руб.\n  Ингредиенты: {(Ingredients.Any() ? string.Join(", ", Ingredients) : "нет")}";

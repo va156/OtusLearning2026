@@ -9,7 +9,7 @@ public static class CoffeeShopService
 		Console.WriteLine("=== Демонстрация паттерна Прототип ===\n");
 
 		// ========== IMyCloneable<T> ==========
-		Console.WriteLine("--- IMyCloneable<T> (кастомный интерфейс) на примере Coffee ---\n");
+		Console.WriteLine("--- IMyCloneable<T> ---\n");
 
 		// Создаём оригинал
 		var originalCoffee = new Coffee(
@@ -87,5 +87,41 @@ public static class CoffeeShopService
 
 		Console.WriteLine("Клон - ингредиенты не изменились:");
 		Console.WriteLine(clonedTea);
+		Console.WriteLine();
+
+		// ========== Поверхностное копирование ==========
+		// Создаем чай
+		var shallowDemoTea = new Tea(
+			name: "Матча",
+			volumeMl: 250,
+			price: 220m,
+			temperatureCelsius: 75,
+			teaType: "зелёный",
+			hasLemon: false,
+			ingredients: new List<string> { "вода", "матча" }
+		);
+
+		Console.WriteLine("Оригинал:");
+		Console.WriteLine(shallowDemoTea);
+		Console.WriteLine();
+
+		//Клонируем с использованием поверхностного копирования
+		var shallowCopy = shallowDemoTea.ShallowClone();
+
+		Console.WriteLine("Клон после поверхностного копирования:");
+		Console.WriteLine(shallowCopy);
+		Console.WriteLine();
+
+		// Изменяем список ингредиентов в клоне
+		((Tea)shallowCopy).Ingredients.Add("мёд");
+
+		Console.WriteLine("Клон после добавления мёда в ингредиенты:");
+		Console.WriteLine(shallowCopy);
+		Console.WriteLine();
+
+		Console.WriteLine("Оригинал после изменения клона. Тут тоже появился мёд, т.к. список ингридентов не скопировался, а просто передалась ссылка на список:");
+		Console.WriteLine(shallowDemoTea);
+		Console.WriteLine();
 	}
 }
+
