@@ -18,7 +18,7 @@ public class ParallelFileReader
 		};
 		var sw = new Stopwatch();
 
-		Console.WriteLine(" === ДЗ: Task: Параллельное считывание файлов. ===\n\n");
+		Console.WriteLine("\n=== ДЗ: Task: Параллельное считывание файлов. ===\n");
 
 		sw.Start();
 		await Task1_CountSpacesInMultipleFilesAsync(targetFilesForTask1);
