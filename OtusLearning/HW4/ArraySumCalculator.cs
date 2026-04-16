@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace OtusLearning.HW4;
 
@@ -63,32 +64,33 @@ public class ArraySumCalculator
 		List<Thread> threads = new List<Thread>();
 		List<long> partialSums = new List<long>(new long[threadCount]);
 
-		int chunkSize = arr.Length / threadCount;
-		int remainder = arr.Length % threadCount;
-		int startIndex = 0;
+		var partitioner = Partitioner.Create(0, arr.Length);
+		var ranges = partitioner.GetPartitions(threadCount).ToList();
 
 		for (int i = 0; i < threadCount; i++)
 		{
 			int idx = i;
-			int start = startIndex;
-			int end = startIndex + chunkSize + (i < remainder ? 1 : 0);
+			var range = ranges[i];
 
 			Thread thread = new Thread(() =>
 			{
 				long sum = 0;
-				for (int j = start; j < end; j++)
+				while (range.MoveNext())
 				{
-					if (useHeavy)
-						sum += (long)Math.Sqrt(arr[j] * 1000) + (long)Math.Pow(arr[j] % 50, 2) + (long)Math.Sin(arr[j]);
-					else
-						sum += arr[j];
+					var (start, end) = range.Current;
+					for (int j = start; j < end; j++)
+					{
+						if (useHeavy)
+							sum += (long)Math.Sqrt(arr[j] * 1000) + (long)Math.Pow(arr[j] % 50, 2) + (long)Math.Sin(arr[j]);
+						else
+							sum += arr[j];
+					}
 				}
 				partialSums[idx] = sum;
 			});
 
 			threads.Add(thread);
 			thread.Start();
-			startIndex = end;
 		}
 
 		foreach (Thread t in threads) t.Join();
@@ -98,6 +100,7 @@ public class ArraySumCalculator
 			total += partialSums[i];
 		return total;
 	}
+
 	private static long PlinqSum(int[] arr, bool useHeavy)
 	{
 		if (useHeavy)
