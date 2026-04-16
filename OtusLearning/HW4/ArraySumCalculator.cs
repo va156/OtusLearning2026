@@ -105,7 +105,7 @@ public class ArraySumCalculator
 	{
 		if (useHeavy)
 		{
-			return arr.AsParallel()
+			return arr.AsParallel() 
 				.Select(x => (long)Math.Sqrt(x * 1000) + (long)Math.Pow(x % 50, 2) + (long)Math.Sin(x))
 				.Sum();
 		}
